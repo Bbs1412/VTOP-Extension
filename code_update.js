@@ -121,7 +121,12 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
                 if (!existingTotalsRow) {
                     // Create a new row for totals
                     const totalsRow = document.createElement('tr');
-                    totalsRow.id = 'bbs_custom'; // Assign the unique ID to the row
+                    // assign the class "tableContent-level1" to the row 
+                    totalsRow.className = 'tableContent-level1';
+                    // Assign the unique ID "bbs_custom" to the row
+                    totalsRow.id = 'bbs_custom';
+                    // // align center for all cells:
+                    // totalsRow.style.textAlign = 'center';
 
                     totals.forEach((total, index) => {
                         const cell = document.createElement('td');
@@ -138,7 +143,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
                         }
                         totalsRow.appendChild(cell);
                     });
-
+                    
                     // Optional: Add custom styling for the totals row
                     if (highlightRow) {
                         totalsRow.style.backgroundColor = '#f0f0f0';
@@ -147,9 +152,11 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
                         // show the border between cells:
                         totalsRow.style.borderCollapse = 'collapse';
                     }
-                    else {
-                        // Copy the formatting of the last row of the table
-                    }
+                    
+                    // Append the totals row to the table > tbody > 
+                    table.tBodies[0].appendChild(totalsRow);
+
+                    if (logErrors) console.log(` |-> Appended totals row to table with ID #bbs_custom`);
 
                 } else {
                     if (logErrors) console.log(` |-> Totals rows already exists`);
@@ -172,8 +179,3 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 // Example: Call the function to append totals row with highlighting
 // processTables(updateOnPage = true, highlightRow = true, logErrors = true);
 processTables(updateOnPage = true, highlightRow = false, logErrors = true);
-
-
-// Make separate function for this:
-// Example: Call the function to remove totals rows
-// processTables(updateOnPage=false);
