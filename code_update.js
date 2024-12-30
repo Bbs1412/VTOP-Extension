@@ -42,6 +42,23 @@ function getColumnSums(table) {
 }
 
 
+function removeTotalsRows(logErrors = true) {
+    // Select all rows with ID 'bbs_custom'
+    const existingTotalsRows = document.querySelectorAll('tr#bbs_custom');
+
+    if (existingTotalsRows.length > 0) {
+        if (logErrors) console.log(` |-> Found ${existingTotalsRows.length} totals row(s) to remove`);
+
+        // Iterate over the NodeList and remove each row
+        existingTotalsRows.forEach(row => row.remove());
+
+        if (logErrors) console.log(` |-> Removed all totals rows with ID #bbs_custom`);
+    } else {
+        if (logErrors) console.log(` |-> No totals rows found to remove`);
+    }
+}
+
+
 function processTables(updateOnPage = true, highlightRow = false, logErrors = true) {
     // Pick the parent table:
     const parent_table = document.querySelector('table.customTable');
@@ -96,18 +113,48 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
             const totals = getColumnSums(table);
             if (logErrors) console.log(` |-> Calculated totals:`, totals);
 
-            // Show the totals on page in new row with id #bbs_cust:
+            // Show the totals on page in new row with id #bbs_custom:
             if (updateOnPage) {
-                // Append the totals row to the table
-                const totalsRow = document.createElement('tr');
-                totals.forEach((total, index) => {
-                    const cell = document.createElement('td');
-                    cell.textContent = total;
-                    totalsRow.appendChild(cell);
-                });
-                table.appendChild(totalsRow);
+                // Check if the totals row already exists
+                const existingTotalsRow = table.querySelector('tr#bbs_custom');
+
+                if (!existingTotalsRow) {
+                    // Create a new row for totals
+                    const totalsRow = document.createElement('tr');
+                    totalsRow.id = 'bbs_custom'; // Assign the unique ID to the row
+
+                    totals.forEach((total, index) => {
+                        const cell = document.createElement('td');
+                        // Set cell content based on the column type
+                        if (typeof total === 'string') {
+                            // For "Total" label in the second column
+                            cell.textContent = total;
+                        } else if (total !== 0) {
+                            // Format numbers to 2 decimal places
+                            cell.textContent = total.toFixed(2);
+                        } else {
+                            // Leave blank for non-numeric columns
+                            cell.textContent = '-';
+                        }
+                        totalsRow.appendChild(cell);
+                    });
+
+                    // Optional: Add custom styling for the totals row
+                    if (highlightRow) {
+                        totalsRow.style.backgroundColor = '#f0f0f0';
+                        totalsRow.style.fontWeight = 'bold';
+                        totalsRow.style.border = '1px solid black';
+                        // show the border between cells:
+                        totalsRow.style.borderCollapse = 'collapse';
+                    }
+                    else {
+                        // Copy the formatting of the last row of the table
+                    }
+
+                } else {
+                    if (logErrors) console.log(` |-> Totals rows already exists`);
+                }
             }
-            if (logErrors) console.log(` |-> Appended totals row  to table`);
 
             currentRow += 1;
         }
@@ -124,7 +171,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 
 // Example: Call the function to append totals row with highlighting
 // processTables(updateOnPage = true, highlightRow = true, logErrors = true);
-processTables(updateOnPage = false, highlightRow = false, logErrors = true);
+processTables(updateOnPage = true, highlightRow = false, logErrors = true);
 
 
 // Make separate function for this:
