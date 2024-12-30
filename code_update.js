@@ -11,6 +11,7 @@ function getColumnSums(table) {
 
     // Iterate through data rows to calculate totals
     rows.slice(1).forEach((row) => {
+        // Iterate through cells in the row and keep updating totals:
         row.querySelectorAll('td').forEach((cell, index) => {
             const value = parseFloat(cell.textContent.trim());
 
@@ -28,9 +29,17 @@ function getColumnSums(table) {
         });
     });
 
+    for (let i = 0; i < totals.length; i++) {
+        if (totals[i] === 0) {
+            totals[i] = '-';
+        }
+
+        if (typeof totals[i] === 'number') {
+            totals[i] = totals[i].toFixed(2);
+        }
+    }
     return totals;
 }
-
 
 
 function processTables(updateOnPage = true, highlightRow = false, logErrors = true) {
@@ -70,7 +79,8 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
             let cells = row.querySelectorAll('td');
             const courseTitle = cells[courseTitleIndex].textContent.trim();
             subjectCount++;
-            if (logErrors) console.log('[', subjectCount, '] Found Course Title:', courseTitle);
+            if (logErrors) console.log(`[${subjectCount}] Found Course:`);
+            if (logErrors) console.log(` |-> Course Title: ${courseTitle}`);
 
             row = rows[++currentRow];
 
@@ -84,7 +94,20 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 
             // Get the totals (array) for the table
             const totals = getColumnSums(table);
-            if (logErrors) console.log('Totals:', totals);
+            if (logErrors) console.log(` |-> Calculated totals:`, totals);
+
+            // Show the totals on page in new row with id #bbs_cust:
+            if (updateOnPage) {
+                // Append the totals row to the table
+                const totalsRow = document.createElement('tr');
+                totals.forEach((total, index) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = total;
+                    totalsRow.appendChild(cell);
+                });
+                table.appendChild(totalsRow);
+            }
+            if (logErrors) console.log(` |-> Appended totals row  to table`);
 
             currentRow += 1;
         }
