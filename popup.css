@@ -1,0 +1,68 @@
+/* Define global variables for light and dark themes */
+:root {
+    --bg-light: white;
+    --text-light: black;
+    --button-light: #007bff;
+    --button-hover-light: #0056b3;
+
+    --bg-dark: #2a2a2a;
+    --text-dark: white;
+    --button-dark: #485fc7;
+    --button-hover-dark: #1565c0;
+}
+
+/* Base Styles */
+body#popupBody {
+    font-family: Arial, sans-serif;
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+    justify-items: center;
+
+    /* Default light mode */
+    background-color: var(--bg-light);
+    color: var(--text-light);
+}
+
+h4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+button {
+    padding: 5px 10px;
+    margin: 5px 0;
+    width: 10rem;
+    border-radius: 20px;
+    background-color: var(--button-light);
+    /* Default light mode button */
+    color: var(--text-light);
+    /* Button text matches theme */
+    border: none;
+    cursor: pointer;
+
+    font-size: 0.90rem;
+}
+
+button:hover {
+    background-color: var(--button-hover-light);
+}
+
+/* Dark Mode Styles */
+@media (prefers-color-scheme: dark) {
+    body#popupBody {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    button {
+        background-color: var(--button-dark);
+        color: var(--text-dark);
+    }
+
+    button:hover {
+        background-color: var(--button-hover-dark);
+    }
+}
