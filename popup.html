@@ -2,18 +2,47 @@
 <html>
 
 <head>
-  <title>VTOP Table Enhancer</title>
-  <link rel="stylesheet" type="text/css" href="popup.css">
+    <title>VTOP Marks Total Extension</title>
+    <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 
 <body id="popupBody">
 
-  <h4>VTOP Table Enhancer</h4>
-  <button id="test">Say Hii</button>
-  <button id="addTotals">Add Totals Row</button>
-  <button id="removeTotals">Remove Totals Row</button>
+    <h4>VTOP Table Enhancer</h4>
+    <button id="test">Say Hii</button>
+    <button id="addTotals">Add Totals Row</button>
+    <button id="removeTotals">Remove Totals Row</button>
 
-  <script src="code_update.js"></script>
+    <hr>
+
+    <h4>Customizations</h4>
+    <form id="customizationsForm">
+        <label>
+            <input type="checkbox" id="enableLogging">
+            Enable Logging
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="highlightTotals">
+            Highlight Total Rows
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="alertBeforeOps">
+            Alert Before Operations
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="updateOnPage">
+            Update on Page
+        </label>
+        <br>
+        <button id="saveCustomizations" type="button">Save Customizations</button>
+    </form>
+
+
+    <script src="code_update.js"></script>
 </body>
+
 
 </html>
