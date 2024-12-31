@@ -5,7 +5,8 @@
     "description": "Enhances VTOP marks section by adding totals rows automatically to all the subjects.",
     "permissions": [
         "activeTab",
-        "scripting"
+        "scripting",
+        "storage"
     ],
     "host_permissions": [
         "https://*.vtopcc.vit.ac.in/*"
