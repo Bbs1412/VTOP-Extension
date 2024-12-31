@@ -1,4 +1,8 @@
-// Description: This script is used to update the table with totals row for each subject.
+// -------------------------------------------------------------------------
+// The main part of script for all the functionality of the extension
+// Description: This script is used to update the table with
+// totals row for each subject.
+// -------------------------------------------------------------------------
 
 function getColumnSums(table) {
     // iterate all rows and sum the values in each column separately
@@ -65,7 +69,8 @@ function removeTotalsRows(logErrors = true) {
 function processTables(updateOnPage = true, highlightRow = false, logErrors = true) {
     // Pick the parent table:
     const parent_table = document.querySelector('table.customTable');
-    if (logErrors) console.log('Found parent table');
+    if (logErrors) console.log('[BBS Extension] Adding totals rows:');
+    if (logErrors) console.log(' |-> Found parent table');
 
     try {
         // Get only the direct child rows of the parent table
@@ -73,14 +78,14 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 
         // Skip tables with no data rows
         if (rows.length < 2) {
-            console.log('Table has no data rows:', parent_table);
+            console.log(' |-> Table has no data rows:', parent_table);
             return;
         }
 
         // Find the header row of the parent table (which is 0th row actually):
         const headerRow = rows.find(row => row.classList.contains('tableHeader'));
         if (!headerRow) {
-            console.log('Table has no header row:', parent_table);
+            console.log(' |-> Table has no header row:', parent_table);
             return;
         }
 
@@ -88,7 +93,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
         const courseTitleIndex = Array.from(headerRow.children).findIndex(cell =>
             cell.textContent.trim() === 'Course Title'
         );
-        if (logErrors) console.log('Found Course Title index:', courseTitleIndex);
+        if (logErrors) console.log(' |-> Found Course Title index:', courseTitleIndex);
 
         // Iterate through data rows to get subjects and marks in alternate rows:
         currentRow = 1;
@@ -99,7 +104,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
             let cells = row.querySelectorAll('td');
             const courseTitle = cells[courseTitleIndex].textContent.trim();
             subjectCount++;
-            if (logErrors) console.log(`[${subjectCount}] Found Course:`);
+            if (logErrors) console.log(` |-> [${subjectCount}] Found Course:`);
             if (logErrors) console.log(` |-> Course Title: ${courseTitle}`);
 
             row = rows[++currentRow];
@@ -107,7 +112,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
             // Now this row has only one td which hold the table in it, get that table pass to fn
             const table = row.querySelector('table');
             if (!table) {
-                console.log('No table found in row:', row);
+                console.log(' |-> No table found in row:', row);
                 currentRow++;
                 continue;
             }
@@ -172,7 +177,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
         return true;
     }
     catch (error) {
-        console.error('Error processing table:', error);
+        console.error(' |-> Error processing table:', error);
         return false;
     }
 };
