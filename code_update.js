@@ -183,9 +183,21 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 };
 
 
+// -------------------------------------------------------------------------
+// test function
+// -------------------------------------------------------------------------
+
+function testFunction() {
+    console.log("[BBS Extension] Test function called");
+    window.alert('[BBS Extension] Test function active');
+    return true;
+}
 
 
-// Example: Call the function to append totals row with highlighting
+// -------------------------------------------------------------------------
+// Sample calls:
+// -------------------------------------------------------------------------
+
 // Testing:
 // processTables(updateOnPage = true, highlightRow = false, logErrors = true);
 
@@ -199,4 +211,5 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 // window.addEventListener('DOMContentLoaded', () => {
 //     processTables(updateOnPage = true, highlightRow = true, logErrors = true);
 // });
+
 
