@@ -15,6 +15,8 @@ This is a simple chrome extension that adds the subject wise total marks of a st
 ![Before](./assets/before.png)
 + After:
 ![After](./assets/after.png)
++ Options:
+![Options](./assets/popup.png)
 
 ## **How to Use the Extension:**
 
