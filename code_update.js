@@ -1,3 +1,5 @@
+// Description: This script is used to update the table with totals row for each subject.
+
 function getColumnSums(table) {
     // iterate all rows and sum the values in each column separately
     // Some might be strings, so we need to check for that and skip them
@@ -45,6 +47,7 @@ function getColumnSums(table) {
 function removeTotalsRows(logErrors = true) {
     // Select all rows with ID 'bbs_custom'
     const existingTotalsRows = document.querySelectorAll('tr#bbs_custom');
+    if (logErrors) console.log('[BBS Extension] Removing totals rows');
 
     if (existingTotalsRows.length > 0) {
         if (logErrors) console.log(` |-> Found ${existingTotalsRows.length} totals row(s) to remove`);
@@ -143,7 +146,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
                         }
                         totalsRow.appendChild(cell);
                     });
-                    
+
                     // Optional: Add custom styling for the totals row
                     if (highlightRow) {
                         totalsRow.style.backgroundColor = '#f0f0f0';
@@ -152,7 +155,7 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
                         // show the border between cells:
                         totalsRow.style.borderCollapse = 'collapse';
                     }
-                    
+
                     // Append the totals row to the table > tbody > 
                     table.tBodies[0].appendChild(totalsRow);
 
@@ -176,6 +179,19 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 
 
 
+
 // Example: Call the function to append totals row with highlighting
+// Testing:
+// processTables(updateOnPage = true, highlightRow = false, logErrors = true);
+
+// Development:
 // processTables(updateOnPage = true, highlightRow = true, logErrors = true);
-processTables(updateOnPage = true, highlightRow = false, logErrors = true);
+
+// Production:
+// processTables(updateOnPage = true, highlightRow = true, logErrors = false);
+
+// Un-comment this to test via console:
+// window.addEventListener('DOMContentLoaded', () => {
+//     processTables(updateOnPage = true, highlightRow = true, logErrors = true);
+// });
+
