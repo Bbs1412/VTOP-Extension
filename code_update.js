@@ -4,6 +4,7 @@
 // totals row for each subject.
 // -------------------------------------------------------------------------
 
+
 function getColumnSums(table) {
     // iterate all rows and sum the values in each column separately
     // Some might be strings, so we need to check for that and skip them
@@ -105,21 +106,26 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
             const courseTitle = cells[courseTitleIndex].textContent.trim();
             subjectCount++;
             if (logErrors) console.log(` |-> [${subjectCount}] Found Course:`);
-            if (logErrors) console.log(` |-> Course Title: ${courseTitle}`);
+            // if (logErrors) console.log(` |    |-> Course Title: '${courseTitle}'`);
+            if (logErrors) {
+                const highlightColor = '\x1b[33m';
+                const resetColor = '\x1b[0m';
+                console.log(` |    |-> Course Title: ${highlightColor}'${courseTitle}'${resetColor}`);
+            }
 
             row = rows[++currentRow];
 
             // Now this row has only one td which hold the table in it, get that table pass to fn
             const table = row.querySelector('table');
             if (!table) {
-                console.log(' |-> No table found in row:', row);
+                console.log(' |    |-> No table found in row:', row);
                 currentRow++;
                 continue;
             }
 
             // Get the totals (array) for the table
             const totals = getColumnSums(table);
-            if (logErrors) console.log(` |-> Calculated totals:`, totals);
+            if (logErrors) console.log(` |    |-> Calculated totals:`, totals);
 
             // Show the totals on page in new row with id #bbs_custom:
             if (updateOnPage) {
@@ -164,10 +170,10 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
                     // Append the totals row to the table > tbody > 
                     table.tBodies[0].appendChild(totalsRow);
 
-                    if (logErrors) console.log(` |-> Appended totals row to table with ID #bbs_custom`);
+                    if (logErrors) console.log(` |    |-> Appended totals row to table with ID #bbs_custom`);
 
                 } else {
-                    if (logErrors) console.log(` |-> Totals rows already exists`);
+                    if (logErrors) console.log(` |    |-> Totals rows already exists`);
                 }
             }
 
