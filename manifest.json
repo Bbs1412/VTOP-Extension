@@ -1,0 +1,35 @@
+{
+    "manifest_version": 3,
+    "name": "VTOP Marks Total Extension",
+    "version": "1.0",
+    "description": "Enhances VTOP marks section by adding totals rows automatically to all the subjects.",
+    "permissions": [
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://*.vtopcc.vit.ac.in/*"
+    ],
+    "icons": {
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.vtopcc.vit.ac.in/*"
+            ],
+            "js": [
+                "code_update.js"
+            ]
+        }
+    ],
+    "action": {
+        "default_title": "VTOP Marks Total Extension",
+        "default_popup": "popup.html",
+        "default_icon": {
+            "48": "icon48.png",
+            "128": "icon128.png"
+        }
+    }
+}
