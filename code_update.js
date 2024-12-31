@@ -213,3 +213,67 @@ function testFunction() {
 // });
 
 
+// -------------------------------------------------------------------------
+// Event listeners for the popup buttons:
+// Description: This file contains the code for the popup window that appears when the extension icon is clicked.
+// -------------------------------------------------------------------------
+
+
+document.getElementById('addTotals').addEventListener('click', () => {
+    console.log("addTotals button clicked");
+    window.alert('Adding totals rows to the table');
+
+    // Query the active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        // Get the tabId of the active tab
+        const tabId = tabs[0].id;
+
+        chrome.scripting.executeScript({
+            // Specify the tabId
+            target: { tabId: tabId },
+
+            // func: () => processTables(true, true, true),
+            func: () => processTables(updateOnPage = true, highlightRow = true, logErrors = true)
+
+        });
+    });
+});
+
+
+document.getElementById('removeTotals').addEventListener('click', () => {
+    console.log("removeTotals button clicked");
+    window.alert('Removing totals rows from the table');
+
+    // Query the active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        // Get the tabId of the active tab
+        const tabId = tabs[0].id;
+
+        chrome.scripting.executeScript({
+            // Specify the tabId
+            target: { tabId: tabId },
+            // Call the removeTotalsRows function
+            // func: () => removeTotalsRows(true),
+            func: () => removeTotalsRows(logErrors = true),
+        });
+    });
+});
+
+
+document.getElementById('test').addEventListener('click', () => {
+    console.log("Test button clicked");
+    // Query the active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        // Get the tabId of the active tab
+        const tabId = tabs[0].id;
+
+        chrome.scripting.executeScript({
+            // Specify the tabId
+            target: { tabId: tabId },
+            // Call the removeTotalsRows function
+            func: () => testFunction(),
+        });
+    });
+}
+);
+
