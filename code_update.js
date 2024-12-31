@@ -49,29 +49,29 @@ function getColumnSums(table) {
 }
 
 
-function removeTotalsRows(logErrors = true) {
+function removeTotalsRows(logDetails = true) {
     // Select all rows with ID 'bbs_custom'
     const existingTotalsRows = document.querySelectorAll('tr#bbs_custom');
-    if (logErrors) console.log('[BBS Extension] Removing totals rows');
+    if (logDetails) console.log('[BBS Extension] Removing totals rows');
 
     if (existingTotalsRows.length > 0) {
-        if (logErrors) console.log(` |-> Found ${existingTotalsRows.length} totals row(s) to remove`);
+        if (logDetails) console.log(` |-> Found ${existingTotalsRows.length} totals row(s) to remove`);
 
         // Iterate over the NodeList and remove each row
         existingTotalsRows.forEach(row => row.remove());
 
-        if (logErrors) console.log(` |-> Removed all totals rows with ID #bbs_custom`);
+        if (logDetails) console.log(` |-> Removed all totals rows with ID #bbs_custom`);
     } else {
-        if (logErrors) console.log(` |-> No totals rows found to remove`);
+        if (logDetails) console.log(` |-> No totals rows found to remove`);
     }
 }
 
 
-function processTables(updateOnPage = true, highlightRow = false, logErrors = true) {
+function processTables(updateOnPage = true, highlightRow = false, logDetails = true) {
     // Pick the parent table:
     const parent_table = document.querySelector('table.customTable');
-    if (logErrors) console.log('[BBS Extension] Adding totals rows:');
-    if (logErrors) console.log(' |-> Found parent table');
+    if (logDetails) console.log('[BBS Extension] Adding totals rows:');
+    if (logDetails) console.log(' |-> Found parent table');
 
     try {
         // Get only the direct child rows of the parent table
@@ -94,20 +94,30 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
         const courseTitleIndex = Array.from(headerRow.children).findIndex(cell =>
             cell.textContent.trim() === 'Course Title'
         );
-        if (logErrors) console.log(' |-> Found Course Title index:', courseTitleIndex);
+        if (logDetails) console.log(' |-> Found Course Title index:', courseTitleIndex);
 
         // Iterate through data rows to get subjects and marks in alternate rows:
         currentRow = 1;
         subjectCount = 0;
+
+        // Check if the totals row already exists, and remove it if it does
+        const existingTotalsRows = document.querySelectorAll('tr#bbs_custom');
+        if (existingTotalsRows.length > 0) {
+            if (logDetails) console.log(` |-> Totals row already exists, removing it...`);
+            if (logDetails) console.log(` |-> Found ${existingTotalsRows.length} totals row(s) to remove`);
+            // Iterate over the NodeList and remove each row
+            existingTotalsRows.forEach(row => row.remove());
+            if (logDetails) console.log(` |-> Removed all totals rows with ID #bbs_custom`);
+        }
 
         while (currentRow < rows.length) {
             let row = rows[currentRow];
             let cells = row.querySelectorAll('td');
             const courseTitle = cells[courseTitleIndex].textContent.trim();
             subjectCount++;
-            if (logErrors) console.log(` |-> [${subjectCount}] Found Course:`);
-            // if (logErrors) console.log(` |    |-> Course Title: '${courseTitle}'`);
-            if (logErrors) {
+            if (logDetails) console.log(` |-> [${subjectCount}] Found Course:`);
+            // if (logDetails) console.log(` |    |-> Course Title: '${courseTitle}'`);
+            if (logDetails) {
                 const highlightColor = '\x1b[33m';
                 const resetColor = '\x1b[0m';
                 console.log(` |    |-> Course Title: ${highlightColor}'${courseTitle}'${resetColor}`);
@@ -125,56 +135,49 @@ function processTables(updateOnPage = true, highlightRow = false, logErrors = tr
 
             // Get the totals (array) for the table
             const totals = getColumnSums(table);
-            if (logErrors) console.log(` |    |-> Calculated totals:`, totals);
+            if (logDetails) console.log(` |    |-> Calculated totals:`, totals);
 
             // Show the totals on page in new row with id #bbs_custom:
             if (updateOnPage) {
-                // Check if the totals row already exists
-                const existingTotalsRow = table.querySelector('tr#bbs_custom');
+                // Create a new row for totals
+                const totalsRow = document.createElement('tr');
+                // assign the class "tableContent-level1" to the row 
+                totalsRow.className = 'tableContent-level1';
+                // Assign the unique ID "bbs_custom" to the row
+                totalsRow.id = 'bbs_custom';
+                // // align center for all cells:
+                // totalsRow.style.textAlign = 'center';
 
-                if (!existingTotalsRow) {
-                    // Create a new row for totals
-                    const totalsRow = document.createElement('tr');
-                    // assign the class "tableContent-level1" to the row 
-                    totalsRow.className = 'tableContent-level1';
-                    // Assign the unique ID "bbs_custom" to the row
-                    totalsRow.id = 'bbs_custom';
-                    // // align center for all cells:
-                    // totalsRow.style.textAlign = 'center';
-
-                    totals.forEach((total, index) => {
-                        const cell = document.createElement('td');
-                        // Set cell content based on the column type
-                        if (typeof total === 'string') {
-                            // For "Total" label in the second column
-                            cell.textContent = total;
-                        } else if (total !== 0) {
-                            // Format numbers to 2 decimal places
-                            cell.textContent = total.toFixed(2);
-                        } else {
-                            // Leave blank for non-numeric columns
-                            cell.textContent = '-';
-                        }
-                        totalsRow.appendChild(cell);
-                    });
-
-                    // Optional: Add custom styling for the totals row
-                    if (highlightRow) {
-                        totalsRow.style.backgroundColor = '#f0f0f0';
-                        totalsRow.style.fontWeight = 'bold';
-                        totalsRow.style.border = '1px solid black';
-                        // show the border between cells:
-                        totalsRow.style.borderCollapse = 'collapse';
+                totals.forEach((total, index) => {
+                    const cell = document.createElement('td');
+                    // Set cell content based on the column type
+                    if (typeof total === 'string') {
+                        // For "Total" label in the second column
+                        cell.textContent = total;
+                    } else if (total !== 0) {
+                        // Format numbers to 2 decimal places
+                        cell.textContent = total.toFixed(2);
+                    } else {
+                        // Leave blank for non-numeric columns
+                        cell.textContent = '-';
                     }
+                    totalsRow.appendChild(cell);
+                });
 
-                    // Append the totals row to the table > tbody > 
-                    table.tBodies[0].appendChild(totalsRow);
-
-                    if (logErrors) console.log(` |    |-> Appended totals row to table with ID #bbs_custom`);
-
-                } else {
-                    if (logErrors) console.log(` |    |-> Totals rows already exists`);
+                // Optional: Add custom styling for the totals row
+                if (highlightRow) {
+                    totalsRow.style.backgroundColor = '#f0f0f0';
+                    totalsRow.style.fontWeight = 'bold';
+                    totalsRow.style.border = '1px solid black';
+                    // show the border between cells:
+                    totalsRow.style.borderCollapse = 'collapse';
                 }
+
+                // Append the totals row to the table > tbody > 
+                table.tBodies[0].appendChild(totalsRow);
+
+                if (logDetails) console.log(` |    |-> Appended totals row to table with ID #bbs_custom`);
+
             }
 
             currentRow += 1;
@@ -205,17 +208,17 @@ function testFunction() {
 // -------------------------------------------------------------------------
 
 // Testing:
-// processTables(updateOnPage = true, highlightRow = false, logErrors = true);
+// processTables(updateOnPage = true, highlightRow = false, logDetails = true);
 
 // Development:
-// processTables(updateOnPage = true, highlightRow = true, logErrors = true);
+// processTables(updateOnPage = true, highlightRow = true, logDetails = true);
 
 // Production:
-// processTables(updateOnPage = true, highlightRow = true, logErrors = false);
+// processTables(updateOnPage = true, highlightRow = true, logDetails = false);
 
 // Un-comment this to test via console:
 // window.addEventListener('DOMContentLoaded', () => {
-//     processTables(updateOnPage = true, highlightRow = true, logErrors = true);
+//     processTables(updateOnPage = true, highlightRow = true, logDetails = true);
 // });
 
 
@@ -224,43 +227,109 @@ function testFunction() {
 // Description: This file contains the code for the popup window that appears when the extension icon is clicked.
 // -------------------------------------------------------------------------
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Elements
+    const enableLogging = document.getElementById("enableLogging");
+    const highlightTotals = document.getElementById("highlightTotals");
+    const alertBeforeOps = document.getElementById("alertBeforeOps");
+    const updateOnPage = document.getElementById("updateOnPage");
+    const saveCustomizationsButton = document.getElementById("saveCustomizations");
+
+    // Load saved preferences when popup opens
+    chrome.storage.local.get(["customizations"], (result) => {
+        const customizations = result.customizations || {};
+        enableLogging.checked = customizations.enableLogging !== undefined ? customizations.enableLogging : true;
+        highlightTotals.checked = customizations.highlightTotals !== undefined ? customizations.highlightTotals : true;
+        alertBeforeOps.checked = customizations.alertBeforeOps !== undefined ? customizations.alertBeforeOps : true;
+        updateOnPage.checked = customizations.updateOnPage !== undefined ? customizations.updateOnPage : true;
+    });
+
+    // Save preferences when "Save Customizations" button is clicked
+    saveCustomizationsButton.addEventListener("click", () => {
+        const customizations = {
+            enableLogging: enableLogging.checked,
+            highlightTotals: highlightTotals.checked,
+            alertBeforeOps: alertBeforeOps.checked,
+            updateOnPage: updateOnPage.checked
+        };
+
+        chrome.storage.local.set({ customizations }, () => {
+            alert("Customizations saved!");
+            console.log("[BBS Extension] Customizations saved:", customizations);
+        });
+    });
+});
+
+
 
 document.getElementById('addTotals').addEventListener('click', () => {
-    console.log("addTotals button clicked");
-    window.alert('Adding totals rows to the table');
+    chrome.storage.local.get(["customizations"], (result) => {
+        const customizations = result.customizations || {};
 
-    // Query the active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        // Get the tabId of the active tab
-        const tabId = tabs[0].id;
+        if (customizations.enableLogging) {
+            console.log("[BBS Extension] addTotals button clicked");
+        }
 
-        chrome.scripting.executeScript({
-            // Specify the tabId
-            target: { tabId: tabId },
+        if (customizations.alertBeforeOps) {
+            if (!confirm("Are you sure you want to add totals row?")) {
+                return;
+            }
+        }
 
-            // func: () => processTables(true, true, true),
-            func: () => processTables(updateOnPage = true, highlightRow = true, logErrors = true)
 
+        // Query the active tab
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const tabId = tabs[0].id;
+
+            chrome.scripting.executeScript({
+                target: { tabId: tabId },
+
+                // Pass customizations values explicitly via args
+                func: (updateOnPage, highlightRow, logDetails) => {
+                    processTables(updateOnPage, highlightRow, logDetails);
+                },
+                args: [
+                    customizations.updateOnPage || false,
+                    customizations.highlightTotals || false,
+                    customizations.enableLogging || false
+                ]
+            });
         });
     });
 });
 
 
 document.getElementById('removeTotals').addEventListener('click', () => {
-    console.log("removeTotals button clicked");
-    window.alert('Removing totals rows from the table');
+    chrome.storage.local.get(["customizations"], (result) => {
+        const customizations = result.customizations || {};
 
-    // Query the active tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        // Get the tabId of the active tab
-        const tabId = tabs[0].id;
+        if (customizations.enableLogging) {
+            console.log("[BBS Extension] removeTotals button clicked");
+        }
 
-        chrome.scripting.executeScript({
-            // Specify the tabId
-            target: { tabId: tabId },
-            // Call the removeTotalsRows function
-            // func: () => removeTotalsRows(true),
-            func: () => removeTotalsRows(logErrors = true),
+        if (customizations.alertBeforeOps) {
+            if (!confirm("Are you sure you want to remove totals row?")) {
+                return;
+            }
+        }
+
+        // Query the active tab
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            // Get the tabId of the active tab
+            const tabId = tabs[0].id;
+
+            chrome.scripting.executeScript({
+                // Specify the tabId
+                target: { tabId: tabId },
+
+                // Pass customizations values explicitly via args
+                func: (logDetails) => {
+                    removeTotalsRows(logDetails);
+                },
+                args: [
+                    customizations.enableLogging || true
+                ]
+            });
         });
     });
 });
