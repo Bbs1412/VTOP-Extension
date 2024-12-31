@@ -1,7 +1,7 @@
 # VTOP - Marks Total Extension
 
 ## **Description:**
-This is a simple Chrome extension designed to enhance the functionality of the `VTOP - Chennai Campus` by adding a total marks row to the marks tables under the "Marks" section. 
+This is a simple Chrome extension designed to enhance the functionality of the `VTOP - Chennai Campus` by adding a total marks row to the marks tables under the `VTOP > Examination > Marks` section. 
 + The extension automatically calculates and inserts the total marks for each subject, providing a clearer overview of performance. 
 + It can be customized with features like logging, alerts before operations, highlighting total rows, and enabling or disabling the visibility of changes on page which can be toggled based on user preferences.
 
@@ -13,12 +13,13 @@ This is a simple Chrome extension designed to enhance the functionality of the `
 + HTML
 
 ## **Screenshots:**
-+ Before:
-![Before](./assets/before.png)
-+ After:
-![After](./assets/after.png)
-+ Options:
-![Options](./assets/popup.png)
++ Options:  
+    <img src="./assets/popup.png" width="250">  
++ Before:  
+    <img src="./assets/before.png">
++ After:  
+    <img src="./assets/after.png">
+
 
 ## **How to Use the Extension:**
 
